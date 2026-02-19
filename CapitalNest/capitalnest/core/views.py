@@ -645,10 +645,18 @@ def ai_chat(request):
         print(f"DEBUG: API Key prefix: {api_key[:15] if api_key else 'None'}...")
         print(f"DEBUG: API Key length: {len(api_key) if api_key else 0}")
         
-        # Create OpenAI client with proper authentication
+        # Get the site URL for OpenRouter
+        site_url = request.build_absolute_uri('/')[:-1]  # Remove trailing slash
+        print(f"DEBUG: Site URL: {site_url}")
+        
+        # Create OpenAI client with proper authentication and headers
         client = OpenAI(
             api_key=api_key,
             base_url="https://openrouter.ai/api/v1",
+            default_headers={
+                "HTTP-Referer": site_url,
+                "X-Title": "CapitalNest AI Assistant"
+            }
         )
         
         print("DEBUG: OpenAI client created successfully")
