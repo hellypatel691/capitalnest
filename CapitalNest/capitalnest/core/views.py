@@ -628,12 +628,8 @@ def demat_status(request):
     applications = DematAccount.objects.all().order_by('-created_at')
     return render(request, 'core/demat_status.html', {'applications': applications})
 
-client = OpenAI(
-    api_key=settings.AI_API_KEY,
-    base_url="https://openrouter.ai/api/v1",
-)
+from openai import OpenAI
 
-@csrf_exempt
 @csrf_exempt
 def ai_chat(request):
     if request.method != "POST":
@@ -642,6 +638,20 @@ def ai_chat(request):
     try:
         data = json.loads(request.body)
         user_message = data.get("message")
+        
+        # Debug: Print API key info
+        api_key = settings.AI_API_KEY
+        print(f"DEBUG: API Key loaded: {bool(api_key)}")
+        print(f"DEBUG: API Key prefix: {api_key[:15] if api_key else 'None'}...")
+        print(f"DEBUG: API Key length: {len(api_key) if api_key else 0}")
+        
+        # Create OpenAI client with proper authentication
+        client = OpenAI(
+            api_key=api_key,
+            base_url="https://openrouter.ai/api/v1",
+        )
+        
+        print("DEBUG: OpenAI client created successfully")
 
         # Get user's portfolio data for personalized insights
         user = request.user
@@ -721,11 +731,7 @@ Use this data to provide PERSONALIZED investment advice specific to the user's p
                     )
                 },
                 {"role": "user", "content": user_message}
-            ],
-            extra_headers={
-                "HTTP-Referer": "http://localhost:8000",
-                "X-Title": "CapitalNest AI"
-            }
+            ]
         )
 
         return JsonResponse({
