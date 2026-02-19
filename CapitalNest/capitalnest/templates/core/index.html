@@ -1,0 +1,1862 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>CapitalNest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/png" href="{% static 'images/2.png' %}">
+
+  <!-- Bootstrap 5 CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- AOS (Animate On Scroll) -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0052ff;
+      --accent: #00d67a;
+      --dark: #01050fff;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--light);
+      color: var(--dark);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0041d6;
+    }
+
+    .text-accent {
+      color: var(--accent) !important;
+    }
+
+    section {
+      padding: 80px 0;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: #fff;
+    }
+
+    .card {
+      border: none;
+      border-radius: 1rem;
+    }
+
+    .trust-badge {
+      height: 40px;
+      margin: 0 8px;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- =======  Modern Glass Navbar  ======= -->
+<nav class="navbar navbar-expand-lg navbar-dark px-3 fixed-top">
+  <div class="container-fluid">
+
+    <!-- Logo + Brand lock-up -->
+    <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+      <img src="{% static 'images/2.png' %}"
+           alt="CapitalNest logo"
+           width="42" height="42"
+           class="rounded-circle me-2 shadow-sm">
+      <span class="brand-text">CapitalNest</span>
+    </a>
+
+    <!-- Mobile toggler -->
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="toggler-icon"></span>
+    </button>
+
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'stocks' %}">Stocks</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link" href="{% url 'mutual_funds' %}">Mutual Funds</a>
+        </li> -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'ipo' %}">IPO</a>
+        </li>
+        <li class="nav-item ms-lg-3">
+          <!-- <a class="btn btn-accent px-3" href="{% url 'login' %}" 
+            style="background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%); 
+                    border: none; 
+                    color: #0f172a; 
+                    font-weight: 600;
+                    border-radius: 12px;
+                    padding: 10px 24px;
+                    box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
+                    transition: all 0.3s ease;">
+            Login / Sign Up
+          </a> -->
+          {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" style="background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%); 
+                    border: none; 
+                    color: #0f172a; 
+                    font-weight: 600;
+                    border-radius: 12px;
+                    padding: 10px 24px;
+                    box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
+                    transition: all 0.3s ease;" class="btn btn-accent px-3">Logout</a>
+          {% else %}
+            <a href="{% url 'login' %}" style="background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%); 
+                    border: none; 
+                    color: #0f172a; 
+                    font-weight: 600;
+                    border-radius: 12px;
+                    padding: 10px 24px;
+                    box-shadow: 0 4px 15px rgba(34, 211, 238, 0.3);
+                    transition: all 0.3s ease;" class="btn btn-accent px-3">Login / Sign Up</a>
+          {% endif %}
+
+        </li>
+
+        <style>
+          .btn-accent:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 211, 238, 0.4) !important;
+          }
+          
+          .btn-accent:active {
+            transform: scale(0.98);
+          }
+        </style>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<style>
+/* ----------  glass navbar  ---------- */
+.navbar {
+  background: rgba(15, 23, 42, .65);   /* slate-900 @ 65 % */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+
+/* brand word-mark */
+.brand-text {
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: -.5px;
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* nav links */
+.nav-link {
+  color: #cbd5e1 !important;               /* slate-300 */
+  font-weight: 500;
+  margin: 0 .6rem;
+  position: relative;
+  transition: color .25s;
+}
+.nav-link:hover {
+  color: #f1f5f9 !important;              /* slate-100 */
+}
+
+/* underline on hover (desktop) */
+@media (min-width: 992px) {
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0; height: 2px;
+    background: #38bdf8;
+    transition: width .3s;
+  }
+  .nav-link:hover::after {
+    width: 100%;
+  }
+}
+
+/* accent button */
+.btn-accent {
+  background: linear-gradient(90deg, #38bdf8 0%, #0ea5e9 100%);
+  color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: transform .15s, box-shadow .25s;
+}
+.btn-accent:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(56, 189, 248, .35);
+}
+
+/* custom toggler icon */
+.toggler-icon {
+  width: 24px;
+  height: 2px;
+  background: #fff;
+  display: block;
+  position: relative;
+  transition: background .3s;
+}
+.toggler-icon::before,
+.toggler-icon::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  position: absolute;
+  left: 0;
+  transition: transform .3s;
+}
+.toggler-icon::before { top: -7px; }
+.toggler-icon::after  { top:  7px; }
+
+.navbar-toggler[aria-expanded="true"] .toggler-icon { background: transparent; }
+.navbar-toggler[aria-expanded="true"] .toggler-icon::before { transform: rotate(45deg) translate(5px, 5px); }
+.navbar-toggler[expanded="true"] .toggler-icon::after  { transform: rotate(-45deg) translate(5px, -5px); }
+</style>
+<!-- Hero - Dark Glassmorphism 3D Cards -->
+<section class="hero overflow-hidden position-relative" style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%); min-height: 700px; perspective: 1000px;">
+  
+  <!-- Animated Background Grid -->
+  <div class="position-absolute w-100 h-100" style="background-image: radial-gradient(circle at 1px 1px, rgba(56, 189, 248, 0.15) 1px, transparent 0); background-size: 40px 40px; opacity: 0.5;"></div>
+  
+  <!-- Glowing Orbs -->
+  <div class="position-absolute rounded-circle" style="width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 82, 255, 0.4) 0%, transparent 70%); filter: blur(60px); top: -200px; left: -200px; animation: float 8s ease-in-out infinite;"></div>
+  <div class="position-absolute rounded-circle" style="width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 214, 122, 0.3) 0%, transparent 70%); filter: blur(60px); bottom: -100px; right: -100px; animation: float 10s ease-in-out infinite reverse;"></div>
+  <div class="position-absolute rounded-circle" style="width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 198, 255, 0.3) 0%, transparent 70%); filter: blur(40px); top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 6s ease-in-out infinite;"></div>
+
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(30px, -30px) scale(1.1); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+    }
+  </style>
+
+  <div class="container py-5 position-relative">
+    <div class="row align-items-center min-vh-100">
+      
+      <!-- Left Content -->
+      <div class="col-lg-5 py-5" data-aos="fade-up">
+        <div class="d-inline-flex align-items-center gap-2 mb-4 px-4 py-2 rounded-pill" style="background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+          <span class="badge rounded-pill" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%);">NEW</span>
+          <small class="text-white fw-medium">AI Portfolio Optimizer 2.0</small>
+        </div>
+
+        <h1 class="display-2 fw-bold mb-4 text-white" style="line-height: 1.1; letter-spacing: -0.02em;">
+          Your Wealth,<br>
+          <span class="position-relative">
+            <span style="background: linear-gradient(135deg, #38bdf8 0%, #00d67a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Amplified</span>
+            <svg class="position-absolute" style="bottom: -15px; left: 0; width: 100%;" viewBox="0 0 200 12" fill="none">
+              <path d="M2.00025 9.99997C25.7509 4.99999 83.7343 -4.10684 198 9.99997" stroke="url(#gradient)" stroke-width="4" stroke-linecap="round"/>
+              <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#38bdf8;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#00d67a;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+        </h1>
+
+        <p class="lead mb-5" style="color: #94a3b8; max-width: 90%;">
+          Join <span style="color: #38bdf8; font-weight: 600;">10 lakh+</span> investors using CapitalNest to build wealth with intelligent, automated portfolio management powered by advanced AI.
+        </p>
+
+        <div class="d-flex flex-wrap gap-4 mb-5 align-items-center">
+          <a href="{% url 'login' %}" class="btn btn-lg px-5 rounded-pill fw-bold shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border: none; color: white; z-index: 1;">
+            <span class="position-relative z-2">Get Started</span>
+            <div class="position-absolute w-100 h-100" style="background: linear-gradient(135deg, #00c6ff 0%, #00d67a 100%); top: 0; left: -100%; transition: left 0.3s; z-index: 0;" onmouseover="this.style.left='0'" onmouseout="this.style.left='-100%'"></div>
+          </a>
+          
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex">
+              <img src="https://randomuser.me/api/portraits/men/1.jpg" class="rounded-circle border border-2" width="40" height="40" style="margin-left: -12px; border-color: rgba(56, 189, 248, 0.5); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+              <img src="https://randomuser.me/api/portraits/women/2.jpg" class="rounded-circle border border-2" width="40" height="40" style="margin-left: -12px; border-color: rgba(56, 189, 248, 0.5); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+              <img src="https://randomuser.me/api/portraits/men/3.jpg" class="rounded-circle border border-2" width="40" height="40" style="margin-left: -12px; border-color: rgba(56, 189, 248, 0.5); box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+            </div>
+            <div>
+              <div class="text-white fw-bold small">10L+ Users</div>
+              <div class="small" style="color: #64748b;">Trust CapitalNest</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats - Glass Cards -->
+        <div class="row g-3">
+          <div class="col-4">
+            <div class="text-center p-3 rounded-4 position-relative overflow-hidden" style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.1);">
+              <div class="position-absolute top-0 start-0 w-100 h-1" style="background: linear-gradient(90deg, #0052ff 0%, #00d67a 100%);"></div>
+              <div class="fw-bold fs-4 text-white">₹500Cr+</div>
+              <small style="color: #64748b;">Assets Managed</small>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="text-center p-3 rounded-4 position-relative overflow-hidden" style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.1);">
+              <div class="position-absolute top-0 start-0 w-100 h-1" style="background: linear-gradient(90deg, #00d67a 0%, #00c6ff 100%);"></div>
+              <div class="fw-bold fs-4 text-white">4.9★</div>
+              <small style="color: #64748b;">App Rating</small>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="text-center p-3 rounded-4 position-relative overflow-hidden" style="background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.1);">
+              <div class="position-absolute top-0 start-0 w-100 h-1" style="background: linear-gradient(90deg, #00c6ff 0%, #0052ff 100%);"></div>
+              <div class="fw-bold fs-4 text-white">99.9%</div>
+              <small style="color: #64748b;">Uptime</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right - 3D Card Stack - Dark Glassmorphism -->
+      <div class="col-lg-7 position-relative" style="transform-style: preserve-3d; min-height: 500px;">
+        
+        <!-- Card 1 - Back -->
+        <div class="card border-0 position-absolute" style="width: 300px; border-radius: 24px; background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(20px); right: 100px; top: 0; transform: rotateY(-15deg) rotateX(5deg) translateZ(-50px); border: 1px solid rgba(56, 189, 248, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.3);">
+                <i class="bi bi-trending-up text-success fs-4"></i>
+              </div>
+              <div>
+                <div class="small" style="color: #64748b;">Returns</div>
+                <div class="fw-bold text-white fs-5">+23.5%</div>
+              </div>
+            </div>
+            <div class="progress" style="height: 6px; background: rgba(255,255,255,0.1);">
+              <div class="progress-bar" style="width: 75%; background: linear-gradient(90deg, #00d67a 0%, #00c6ff 100%);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 - Middle -->
+        <div class="card border-0 position-absolute" style="width: 320px; border-radius: 24px; background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(20px); right: 50px; top: 80px; transform: rotateY(-10deg) rotateX(3deg) translateZ(-25px); border: 1px solid rgba(56, 189, 248, 0.15); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05) inset;">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="fw-bold text-white">Portfolio</span>
+              <span class="badge" style="background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%);">Active</span>
+            </div>
+            <h4 class="fw-bold text-white mb-2">₹8,45,230</h4>
+            <div class="w-100 rounded-3" style="height: 40px; background: linear-gradient(90deg, rgba(0, 82, 255, 0.3) 0%, rgba(0, 214, 122, 0.3) 100%); position: relative; overflow: hidden;">
+              <div class="position-absolute w-100 h-100" style="background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%); animation: shimmer 2s infinite;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 - Front (Main) -->
+        <div class="card border-0 position-relative" style="width: 340px; border-radius: 24px; background: rgba(30, 41, 59, 0.8); backdrop-filter: blur(20px); margin-left: auto; margin-right: 0; transform: rotateY(-5deg) rotateX(2deg); border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 82, 255, 0.1), 0 0 0 1px rgba(255,255,255,0.05) inset;" data-aos="fade-left">
+          <div class="card-header bg-transparent border-0 pt-4 px-4 pb-0">
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fw-bold text-white">AI Recommendations</span>
+              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%);">
+                <i class="bi bi-robot text-white fs-5"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center gap-3 p-3 rounded-3 mb-3" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.1);">
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%);">
+                <i class="bi bi-arrow-up-right text-white"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div class="fw-bold text-white small">Buy HDFC Bank</div>
+                <div class="small" style="color: #64748b;">Target: ₹1,650 | +12%</div>
+              </div>
+              <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #00d67a; border: 1px solid rgba(16, 185, 129, 0.3);">BUY</span>
+            </div>
+            <div class="d-flex align-items-center gap-3 p-3 rounded-3" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(245, 158, 11, 0.1);">
+              <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px; background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);">
+                <i class="bi bi-arrow-down-right text-white"></i>
+              </div>
+              <div class="flex-grow-1">
+                <div class="fw-bold text-white small">Reduce Tech Exposure</div>
+                <div class="small" style="color: #64748b;">Risk: High | -5%</div>
+              </div>
+              <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">HOLD</span>
+            </div>
+          </div>
+          
+          <!-- Decorative Glow -->
+          <div class="position-absolute" style="bottom: -20px; right: -20px; width: 100px; height: 100px; background: radial-gradient(circle, rgba(0, 82, 255, 0.3) 0%, transparent 70%); filter: blur(20px); pointer-events: none;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.hero .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(0, 82, 255, 0.4) !important;
+}
+
+.hero .card {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero .card:hover {
+  transform: rotateY(0deg) rotateX(0deg) translateZ(20px) scale(1.02) !important;
+  border-color: rgba(56, 189, 248, 0.4) !important;
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(0, 82, 255, 0.2) !important;
+}
+
+/* Floating animation for cards */
+.hero .col-lg-7:hover .card:nth-child(1) {
+  animation: float-card 6s ease-in-out infinite;
+}
+.hero .col-lg-7:hover .card:nth-child(2) {
+  animation: float-card 6s ease-in-out infinite 0.5s;
+}
+.hero .col-lg-7:hover .card:nth-child(3) {
+  animation: float-card 6s ease-in-out infinite 1s;
+}
+
+@keyframes float-card {
+  0%, 100% { transform: translateY(0) rotateY(-5deg) rotateX(2deg); }
+  50% { transform: translateY(-10px) rotateY(-5deg) rotateX(2deg); }
+}
+</style>
+  <!-- Features -->
+<section id="features" class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+  <div class="container py-4">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge px-3 py-2 mb-3" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); color: white; border-radius: 20px;">
+        <i class="bi bi-stars me-1"></i> FEATURES
+      </span>
+      <h2 class="fw-bold display-6">Everything You Need to Invest Smarter</h2>
+      <p class="text-muted lead">All-in-one platform for modern investors.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+  <div class="card h-100 border-0 shadow-sm"
+       style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+    <div class="card-body p-4">
+
+      <div class="d-flex align-items-center justify-content-center mb-4"
+           style="width: 70px; height: 70px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border-radius: 16px; color: white;">
+        <i class="bi bi-graph-up-arrow fs-2"></i>
+      </div>
+
+      <!-- DROPDOWN TITLE -->
+      <div class="dropdown">
+        <h5 class="fw-bold mb-3 dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="color: #212529; cursor: pointer;">
+          Real-Time Data
+        </h5>
+
+        <!-- DROPDOWN MENU -->
+        <ul class="dropdown-menu cn-dropdown">
+  <li>
+    <a class="dropdown-item" href="{% url 'yahoo_stocks_page' %}">
+      <div class="item-icon icon-stocks">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+          <polyline points="17 6 23 6 23 12"></polyline>
+        </svg>
+      </div>
+      <div class="item-content">
+        <span class="item-title">Stocks</span>
+        <span class="item-desc">Trade equities & ETFs</span>
+      </div>
+      <div class="item-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </a>
+  </li>
+  
+  <li class="dropdown-divider"></li>
+  
+  <li>
+    <a class="dropdown-item" href="{% url 'mutual_funds_page' %}">
+      <div class="item-icon icon-mutual">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="item-content">
+        <span class="item-title">Mutual Funds</span>
+        <span class="item-desc">AMFI registered schemes</span>
+      </div>
+      <div class="item-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </a>
+  </li>
+  
+  <li class="dropdown-divider"></li>
+  
+  <li>
+    <a class="dropdown-item" href="{% url 'ipo_real_page' %}">
+      <div class="item-icon icon-ipo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      </div>
+      <div class="item-content">
+        <span class="item-title">IPO</span>
+        <span class="item-desc">New listings & offerings</span>
+      </div>
+      <div class="item-badge">New</div>
+      <div class="item-arrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </div>
+    </a>
+  </li>
+</ul>
+
+<style>
+/* Dropdown Container */
+.cn-dropdown {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 104, 255, 0.12);
+  border-radius: 20px;
+  padding: 12px;
+  min-width: 320px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 104, 255, 0.25),
+    0 12px 24px -8px rgba(0, 0, 0, 0.1);
+  animation: dropdownSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top center;
+}
+
+@keyframes dropdownSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dropdown Items */
+.cn-dropdown .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: #1e293b;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cn-dropdown .dropdown-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 104, 255, 0.05) 0%, rgba(0, 212, 170, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 16px;
+}
+
+.cn-dropdown .dropdown-item:hover {
+  transform: translateX(4px);
+  background: transparent;
+}
+
+.cn-dropdown .dropdown-item:hover::before {
+  opacity: 1;
+}
+
+/* Icon Container */
+.item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.icon-stocks {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+  color: #16a34a;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+}
+
+.icon-mutual {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #0068ff;
+  box-shadow: 0 4px 12px rgba(0, 104, 255, 0.2);
+}
+
+.icon-ipo {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #d97706;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+.cn-dropdown .dropdown-item:hover .item-icon {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 8px 20px rgba(0, 104, 255, 0.3);
+}
+
+/* Content Area */
+.item-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  transition: color 0.3s ease;
+}
+
+.cn-dropdown .dropdown-item:hover .item-title {
+  background: linear-gradient(135deg, #0068ff 0%, #00d4aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.item-desc {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Badge */
+.item-badge {
+  background: linear-gradient(135deg, #0068ff 0%, #00d4aa 100%);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  animation: pulse 2s infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.95); }
+}
+
+/* Arrow */
+.item-arrow {
+  color: #cbd5e1;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.cn-dropdown .dropdown-item:hover .item-arrow {
+  color: #0068ff;
+  transform: translateX(4px);
+}
+
+/* Divider */
+.dropdown-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0, 104, 255, 0.1) 50%, transparent 100%);
+  margin: 8px 0;
+  border: none;
+}
+
+/* Active State */
+.cn-dropdown .dropdown-item:active {
+  transform: scale(0.98);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .cn-dropdown {
+    min-width: 280px;
+    margin: 0 16px;
+  }
+  
+  .item-desc {
+    display: none;
+  }
+}
+</style>
+      </div>
+
+      <!-- STATIC PLACEHOLDER -->
+      <div class="small text-muted">
+        <div class="mb-2 p-2 rounded-3" style="background: #f8f9fa;">
+          Live market data
+        </div>
+        <div class="p-2 rounded-3" style="background: #f8f9fa;">
+          Select data type to view
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+      <!-- Feature 2: Portfolio Analytics -->
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-center mb-4" 
+                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #00c6ff 0%, #00d67a 100%); border-radius: 16px; color: white;">
+              <i class="bi bi-pie-chart fs-2"></i>
+            </div>
+            <a href="{% url 'portfolio' %}" class="text-decoration-none">
+              <h5 class="fw-bold mb-3" style="color: #0052ff;">Portfolio Analytics</h5>
+            </a>
+            <p class="text-muted small mb-3">Risk, diversification, and tax-loss harvesting insights.</p>
+            <div class="mt-auto">
+              <span class="badge bg-light text-muted border">
+                <i class="bi bi-arrow-up-right text-success me-1"></i> Smart Analysis
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: AI Insights -->
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-center mb-4" 
+                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #00d67a 0%, #0052ff 100%); border-radius: 16px; color: white;">
+              <i class="bi bi-robot fs-2"></i>
+            </div>
+            <a href="{% url 'ai_insights_page' %}" class="text-decoration-none">
+              <h5 class="fw-bold mb-3" style="color: #00d67a;">AI Insights</h5>
+            </a>
+            <p class="text-muted small mb-3">Personalized recommendations and smart rebalancing.</p>
+            <div class="mt-auto">
+              <span class="badge bg-light text-muted border">
+                <i class="bi bi-magic text-primary me-1"></i> AI Powered
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4: Demat Account -->
+      <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="400">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+          <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-center mb-4" 
+                 style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; color: white;">
+              <i class="bi bi-shield-lock fs-2"></i>
+            </div>
+            <a href="{% url 'demat_open' %}" class="text-decoration-none">
+              <h5 class="fw-bold mb-3" style="color: #667eea;">Demat Account</h5>
+            </a>
+            <p class="text-muted small mb-3">Begin your stock market journey with zero hassle.</p>
+            <div class="mt-auto">
+              <span class="badge bg-light text-muted border">
+                <i class="bi bi-check-circle-fill text-success me-1"></i> Zero Fees
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+#features .card {
+  transition: all 0.3s ease;
+}
+#features .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 82, 255, 0.15) !important;
+}
+#features .card:hover h5 {
+  transform: translateX(5px);
+  transition: transform 0.3s ease;
+}
+#features a:hover h5 {
+  opacity: 0.8;
+}
+</style>
+<!-- Testimonials -->
+<section id="testimonials" class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+  <div class="container py-4">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge px-3 py-2 mb-3" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); color: white; border-radius: 20px;">
+        <i class="bi bi-heart-fill me-1"></i> TESTIMONIALS
+      </span>
+      <h2 class="fw-bold display-6">Loved by Investors Worldwide</h2>
+      <p class="text-muted lead">See what our users have to say about their experience</p>
+    </div>
+
+    <div class="row g-4 justify-content-center">
+      
+      <!-- Testimonial 1 -->
+      <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+          <div class="card-body p-4 p-md-5 position-relative">
+            <!-- Quote Icon -->
+            <div class="position-absolute top-0 end-0 mt-4 me-4" style="opacity: 0.1;">
+              <i class="bi bi-quote fs-1 text-primary"></i>
+            </div>
+            
+            <!-- Stars -->
+            <div class="mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+
+            <p class="mb-4 fs-5" style="color: #495057; line-height: 1.6;">
+              "This platform transformed how I manage my portfolio. The AI insights helped me increase my returns by <strong style="color: #0052ff;">23%</strong> last year."
+            </p>
+
+            <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center justify-content-center fw-bold text-white" 
+                   style="width: 50px; height: 50px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border-radius: 12px; font-size: 1.2rem;">
+                S
+              </div>
+              <div class="ms-3">
+                <div class="fw-bold fs-5 mb-1">Sarah M.</div>
+                <small class="text-muted" style="font-size: 0.9rem;">
+                  <i class="bi bi-graph-up-arrow text-success me-1"></i> Active Investor
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial 2 -->
+      <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+          <div class="card-body p-4 p-md-5 position-relative">
+            <!-- Quote Icon -->
+            <div class="position-absolute top-0 end-0 mt-4 me-4" style="opacity: 0.1;">
+              <i class="bi bi-quote fs-1 text-success"></i>
+            </div>
+            
+            <!-- Stars -->
+            <div class="mb-3">
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+              <i class="bi bi-star-fill text-warning"></i>
+            </div>
+
+            <p class="mb-4 fs-5" style="color: #495057; line-height: 1.6;">
+              "Finally, a tool that brings all my investments together. The tax optimization features alone saved me <strong style="color: #00d67a;">thousands</strong>."
+            </p>
+
+            <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center justify-content-center fw-bold text-white" 
+                   style="width: 50px; height: 50px; background: linear-gradient(135deg, #00d67a 0%, #0052ff 100%); border-radius: 12px; font-size: 1.2rem;">
+                M
+              </div>
+              <div class="ms-3">
+                <div class="fw-bold fs-5 mb-1">Michael R.</div>
+                <small class="text-muted" style="font-size: 0.9rem;">
+                  <i class="bi bi-piggy-bank text-primary me-1"></i> Long-term Investor
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row mt-5 g-3 text-center" data-aos="fade-up" data-aos-delay="300">
+      <div class="col-6 col-md-3">
+        <div class="p-3">
+          <div class="display-6 fw-bold mb-1" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); background-clip: text ; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">4.9/5</div>
+          <small class="text-muted">App Store Rating</small>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3">
+          <div class="display-6 fw-bold mb-1" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">10L+</div>
+          <small class="text-muted">Active Users</small>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3">
+          <div class="display-6 fw-bold mb-1" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">₹500Cr+</div>
+          <small class="text-muted">Assets Managed</small>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="p-3">
+          <div class="display-6 fw-bold mb-1" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">99.9%</div>
+          <small class="text-muted">Uptime</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+#testimonials .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 82, 255, 0.15) !important;
+}
+#testimonials .card:hover .bi-quote {
+  opacity: 0.2 !important;
+  transform: scale(1.2);
+  transition: all 0.3s ease;
+}
+</style>
+<!-- Why Choose CapitalNest - Card Comparison -->
+<section id="comparison" class="bg-light py-5">
+  <div class="container py-4">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 mb-3">COMPARISON</span>
+      <h2 class="fw-bold display-6">Why Investors Choose CapitalNest</h2>
+      <p class="text-muted lead">See how we stack up against traditional platforms</p>
+    </div>
+
+    <div class="row g-4 justify-content-center align-items-stretch">
+      
+      <!-- Competitor 1 -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px;">
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <i class="bi bi-bank fs-1 text-muted"></i>
+            </div>
+            <h4 class="fw-bold text-muted mb-4">Traditional Brokers</h4>
+            <div class="display-5 fw-bold text-muted mb-4">₹300-500</div>
+            <p class="text-muted small mb-4">Account opening fee</p>
+            
+            <ul class="list-unstyled text-start mb-4">
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>High brokerage charges</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>No AI insights</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>Complex interface</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-clock text-warning me-2"></i>
+                <span>Business hours support</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CapitalNest - Highlighted with Blue-Green Gradient -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+        <div class="card h-100 border-0 position-relative" style="border-radius: 20px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 50%, #00d67a 100%); transform: scale(1.05); z-index: 10;">
+          <div class="position-absolute top-0 start-50 translate-middle">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill shadow-sm">
+              <i class="bi bi-star-fill me-1"></i>RECOMMENDED
+            </span>
+          </div>
+          <div class="card-body p-4 text-center text-white">
+            <div class="mb-3">
+              <img src="{% static 'images/1.png' %}" alt="CapitalNest" width="60" height="60" class="rounded-circle bg-white p-2">
+            </div>
+            <h3 class="fw-bold mb-4">CapitalNest</h3>
+            <div class="display-4 fw-bold mb-2">₹0</div>
+            <p class="text-white-50 small mb-4">Free account opening</p>
+            
+            <ul class="list-unstyled text-start mb-4">
+              <li class="mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-white me-2 fs-5"></i>
+                <span><strong>Zero</strong> brokerage</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-white me-2 fs-5"></i>
+                <span><strong>AI-powered</strong> insights</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-white me-2 fs-5"></i>
+                <span><strong>Real-time</strong> data</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-white me-2 fs-5"></i>
+                <span><strong>24/7</strong> support</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center">
+                <i class="bi bi-check-circle-fill text-white me-2 fs-5"></i>
+                <span><strong>All-in-one</strong> dashboard</span>
+              </li>
+            </ul>
+            
+            <a href="{% url 'login' %}" class="btn btn-light btn-lg w-100 fw-bold rounded-pill shadow-sm" style="color: #0052ff;">
+              Open Free Account <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Competitor 2 -->
+      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+        <div class="card h-100 border-0 shadow-sm" style="border-radius: 20px;">
+          <div class="card-body p-4 text-center">
+            <div class="mb-3">
+              <i class="bi bi-building fs-1 text-muted"></i>
+            </div>
+            <h4 class="fw-bold text-muted mb-4">Bank Platforms</h4>
+            <div class="display-5 fw-bold text-muted mb-4">₹500-1000</div>
+            <p class="text-muted small mb-4">Account opening fee</p>
+            
+            <ul class="list-unstyled text-start mb-4">
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>Highest brokerage fees</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>Limited features</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                <span>Outdated interface</span>
+              </li>
+              <li class="mb-3 d-flex align-items-center text-muted">
+                <i class="bi bi-clock text-warning me-2"></i>
+                <span>Slow support</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+<!-- Trust badges -->
+<div class="row mt-5 g-4 justify-content-center" data-aos="fade-up" data-aos-delay="400">
+  
+  <!-- Badge 1 -->
+  <div class="col-6 col-md-3">
+    <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border-radius: 16px; color: white;">
+        <i class="bi bi-shield-check fs-2"></i>
+      </div>
+      <h5 class="fw-bold mb-1" style="color: #0052ff;">SEBI Registered</h5>
+      <small class="text-muted">Regulated & Trusted</small>
+    </div>
+  </div>
+
+  <!-- Badge 2 -->
+  <div class="col-6 col-md-3">
+    <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: linear-gradient(135deg, #00c6ff 0%, #00d67a 100%); border-radius: 16px; color: white;">
+        <i class="bi bi-lock fs-2"></i>
+      </div>
+      <h5 class="fw-bold mb-1" style="color: #00c6ff;">256-bit Encryption</h5>
+      <small class="text-muted">Bank-Grade Security</small>
+    </div>
+  </div>
+
+  <!-- Badge 3 -->
+  <div class="col-6 col-md-3">
+    <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: linear-gradient(135deg, #00d67a 0%, #0052ff 100%); border-radius: 16px; color: white;">
+        <i class="bi bi-people fs-2"></i>
+      </div>
+      <h5 class="fw-bold mb-1" style="color: #00d67a;">10L+ Users</h5>
+      <small class="text-muted">Growing Community</small>
+    </div>
+  </div>
+
+  <!-- Badge 4 -->
+  <div class="col-6 col-md-3">
+    <div class="card h-100 border-0 shadow-sm text-center p-4" style="border-radius: 20px; background: white; transition: all 0.3s ease;">
+      <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 70px; height: 70px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; color: white;">
+        <i class="bi bi-award fs-2"></i>
+      </div>
+      <h5 class="fw-bold mb-1" style="color: #667eea;">Award Winning</h5>
+      <small class="text-muted">Industry Recognized</small>
+    </div>
+  </div>
+
+</div>
+
+<style>
+#comparison .card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 82, 255, 0.15) !important;
+}
+</style>
+</section>
+
+<style>
+#comparison .card {
+  transition: all 0.3s ease;
+}
+#comparison .card:not(.position-relative):hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1) !important;
+}
+#comparison .badge.bg-warning {
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+@media (max-width: 768px) {
+  #comparison .col-md-4:nth-child(2) .card {
+    transform: scale(1) !important;
+    order: -1;
+  }
+}
+</style>
+</style>
+<!-- FAQs -->
+<section id="faqs" class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+  <div class="container py-4">
+    <div class="text-center mb-5" data-aos="fade-up">
+      <span class="badge px-3 py-2 mb-3" style="background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); color: white; border-radius: 20px;">
+        <i class="bi bi-question-circle me-1"></i> GOT QUESTIONS?
+      </span>
+      <h2 class="fw-bold display-6">Frequently Asked Questions</h2>
+      <p class="text-muted lead">Everything you need to know before getting started.</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="accordion" id="faqAccordion">
+
+          <!-- FAQ 1 -->
+          <div class="accordion-item mb-3 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;" data-aos="fade-up">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" style="padding: 1.5rem; font-size: 1.1rem;">
+                <span class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border-radius: 10px; color: white;">
+                  <i class="bi bi-shield-lock"></i>
+                </span>
+                Is my investment data secure on CapitalNest?
+              </button>
+            </h2>
+            <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted ps-5" style="padding: 1.5rem; background: #f8f9fa;">
+                <div class="d-flex">
+                  <div class="me-3" style="width: 4px; background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); border-radius: 2px;"></div>
+                  <div>
+                    Yes. We use bank-grade encryption, secure authentication, and industry-standard security practices to ensure your data and investments remain protected at all times.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 2 -->
+          <div class="accordion-item mb-3 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;" data-aos="fade-up" data-aos-delay="100">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" style="padding: 1.5rem; font-size: 1.1rem;">
+                <span class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #00c6ff 0%, #00d67a 100%); border-radius: 10px; color: white;">
+                  <i class="bi bi-graph-up-arrow"></i>
+                </span>
+                Can I track stocks, mutual funds, and IPOs in one place?
+              </button>
+            </h2>
+            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted ps-5" style="padding: 1.5rem; background: #f8f9fa;">
+                <div class="d-flex">
+                  <div class="me-3" style="width: 4px; background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); border-radius: 2px;"></div>
+                  <div>
+                    Absolutely. CapitalNest allows you to monitor stocks, mutual funds, IPOs, and other assets from a single unified dashboard with real-time updates.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 3 -->
+          <div class="accordion-item mb-3 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" style="padding: 1.5rem; font-size: 1.1rem;">
+                <span class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #0052ff 0%, #764ba2 100%); border-radius: 10px; color: white;">
+                  <i class="bi bi-person-check"></i>
+                </span>
+                Do I need prior investment experience to use this platform?
+              </button>
+            </h2>
+            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted ps-5" style="padding: 1.5rem; background: #f8f9fa;">
+                <div class="d-flex">
+                  <div class="me-3" style="width: 4px; background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); border-radius: 2px;"></div>
+                  <div>
+                    No. Our platform is designed for both beginners and experienced investors, offering simple tools, educational insights, and AI-powered recommendations.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 4 -->
+          <div class="accordion-item mb-3 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;" data-aos="fade-up" data-aos-delay="300">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" style="padding: 1.5rem; font-size: 1.1rem;">
+                <span class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 10px; color: white;">
+                  <i class="bi bi-robot"></i>
+                </span>
+                How accurate are the AI-powered investment insights?
+              </button>
+            </h2>
+            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted ps-5" style="padding: 1.5rem; background: #f8f9fa;">
+                <div class="d-flex">
+                  <div class="me-3" style="width: 4px; background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); border-radius: 2px;"></div>
+                  <div>
+                    Our AI models analyze historical trends, market data, and risk metrics to provide insights. However, all investments involve risk, and users should make informed decisions.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- FAQ 5 -->
+          <div class="accordion-item mb-3 border-0 shadow-sm" style="border-radius: 16px; overflow: hidden;" data-aos="fade-up" data-aos-delay="400">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" style="padding: 1.5rem; font-size: 1.1rem;">
+                <span class="me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 10px; color: white;">
+                  <i class="bi bi-gift"></i>
+                </span>
+                Is there a free version available?
+              </button>
+            </h2>
+            <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+              <div class="accordion-body text-muted ps-5" style="padding: 1.5rem; background: #f8f9fa;">
+                <div class="d-flex">
+                  <div class="me-3" style="width: 4px; background: linear-gradient(135deg, #0052ff 0%, #00d67a 100%); border-radius: 2px;"></div>
+                  <div>
+                    Yes. We offer a free plan with essential portfolio tracking features. You can upgrade anytime to access advanced analytics and AI insights.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+#faqs .accordion-button {
+  border-radius: 16px !important;
+  transition: all 0.3s ease;
+}
+#faqs .accordion-button:not(.collapsed) {
+  background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%) !important;
+  color: white !important;
+  box-shadow: 0 10px 30px rgba(0, 82, 255, 0.3);
+}
+#faqs .accordion-button:not(.collapsed) span {
+  background: white !important;
+  color: #0052ff !important;
+}
+#faqs .accordion-button:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+#faqs .accordion-button::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  transition: transform 0.3s ease;
+}
+#faqs .accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+  transform: rotate(-180deg);
+}
+#faqs .accordion-item {
+  transition: transform 0.3s ease;
+}
+#faqs .accordion-item:hover {
+  transform: translateX(5px);
+}
+</style>
+<!-- Footer -->
+<footer class="text-light pt-5 pb-4" style="background: #0f172a; border-top: 1px solid rgba(255,255,255,0.05);">
+  <div class="container">
+
+    <div class="row gy-4">
+      
+      <!-- Brand -->
+      <div class="col-lg-4 col-md-6">
+        <div class="d-flex align-items-center mb-3">
+          <img src="{% static 'images/2.png' %}" alt="logo" width="45" height="45" class="rounded-circle me-3 shadow-sm">
+          <h4 class="brand-name">CapitalNest</h4>
+        </div>
+        <p class="text-light text-opacity-75 small" style="line-height: 1.7; max-width: 300px;">
+          Your intelligent investment companion. Track stocks, IPOs, and mutual funds in real-time with AI-powered insights.
+        </p>
+        
+        <!-- Trust Badges -->
+        <div class="d-flex gap-2 mt-3">
+          <span class="badge bg-dark border border-secondary text-light">
+            <i class="bi bi-shield-check text-success me-1"></i> SEBI
+          </span>
+          <span class="badge bg-dark border border-secondary text-light">
+            <i class="bi bi-lock-fill text-primary me-1"></i> 256-bit
+          </span>
+        </div>
+      </div>
+
+      <!-- Real-Time Data -->
+      <div class="col-lg-2 col-md-6">
+        <h6 class="fw-bold mb-3 text-white">Real-Time Data</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2">
+            <a href="{% url 'yahoo_stocks_page' %}" class="text-light text-opacity-75 text-decoration-none hover-white d-flex align-items-center">
+              <i class="bi bi-graph-up-arrow me-2 text-primary"></i>Stocks
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'ipo_real_page' %}" class="text-light text-opacity-75 text-decoration-none hover-white d-flex align-items-center">
+              <i class="bi bi-rocket me-2 text-warning"></i>IPO
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="{% url 'mutual_funds_page' %}" class="text-light text-opacity-75 text-decoration-none hover-white d-flex align-items-center">
+              <i class="bi bi-pie-chart me-2 text-success"></i>Mutual Funds
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="fw-bold mb-3 text-white">Resources</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2">
+            <a href="#" class="text-light text-opacity-75 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#termsModal">
+              <i class="bi bi-file-text me-2"></i>Terms & Conditions
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="text-light text-opacity-75 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#privacyModal">
+              <i class="bi bi-shield-lock me-2"></i>Privacy Policy
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="text-light text-opacity-75 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#securityModal">
+              <i class="bi bi-shield-check me-2"></i>Security & Compliance
+            </a>
+          </li>
+          <li class="mb-2">
+            <a href="#" class="text-light text-opacity-75 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#helpModal">
+              <i class="bi bi-question-circle me-2"></i>Help & Support
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Connect -->
+      <div class="col-lg-3 col-md-6">
+        <h6 class="fw-bold mb-3 text-white">Connect</h6>
+        <p class="text-light text-opacity-75 small mb-3">Follow us for market updates and investment tips.</p>
+        
+        <!-- Social Icons - UPDATE THESE LINKS MANUALLY -->
+        <div class="d-flex gap-3 mb-4">
+          <a href="https://linkedin.com/in/parshva-shah-b95893279" target="_blank" class="social-icon linkedin" title="LinkedIn">
+            <i class="bi bi-linkedin"></i>
+          </a>
+          <a href="https://instagram.com/parshvashah17" target="_blank" class="social-icon instagram" title="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://github.com/parshvajshahbhuj-ux" target="_blank" class="social-icon github" title="GitHub">
+            <i class="bi bi-github"></i>
+          </a>
+          <a href="https://twitter.com/@ParshvaSha5044" target="_blank" class="social-icon twitter" title="Twitter">
+            <i class="bi bi-twitter"></i>
+          </a>
+        </div>
+
+        <div class="p-3 rounded-3" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+          <small class="text-light text-opacity-50 d-block mb-1">Support</small>
+          <a href="mailto:capitalnest18@gmail.com" class="text-light text-decoration-none fw-semibold hover-accent">
+            <i class="bi bi-envelope-fill me-2 text-primary"></i>capitalnest18@gmail.com
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Divider -->
+    <hr class="my-4" style="border-color: rgba(255,255,255,0.08);">
+
+    <!-- Bottom -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pb-2">
+      <small class="text-light text-opacity-50 mb-2 mb-md-0">
+        © 2025 CapitalNest. All rights reserved. Built with <i class="bi bi-heart-fill text-danger"></i> in India.
+      </small>
+      <div class="small d-flex gap-4">
+        <a href="#" class="text-light text-opacity-50 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#termsModal">Terms</a>
+        <a href="#" class="text-light text-opacity-50 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#privacyModal">Privacy</a>
+        <a href="#" class="text-light text-opacity-50 text-decoration-none hover-white" data-bs-toggle="modal" data-bs-target="#securityModal">Security</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<style>
+.hover-white {
+  transition: all 0.2s ease;
+}
+.hover-white:hover {
+  color: #38bdf8 !important;
+  transform: translateX(3px);
+  display: inline-flex;
+}
+.hover-accent {
+  transition: all 0.2s ease;
+}
+.hover-accent:hover {
+  color: #38bdf8 !important;
+}
+.brand-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Social Icons */
+.social-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: #94a3b8;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.social-icon:hover {
+  transform: translateY(-3px);
+  color: white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+.social-icon.linkedin:hover {
+  background: #0077b5;
+  border-color: #0077b5;
+  box-shadow: 0 10px 20px rgba(0, 119, 181, 0.4);
+}
+.social-icon.instagram:hover {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  border-color: transparent;
+  box-shadow: 0 10px 20px rgba(220, 39, 67, 0.4);
+}
+.social-icon.github:hover {
+  background: #333;
+  border-color: #333;
+  box-shadow: 0 10px 20px rgba(51, 51, 51, 0.4);
+}
+.social-icon.twitter:hover {
+  background: #000;
+  border-color: #000;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+</style>
+
+<!-- ========================================== -->
+<!-- MODALS -->
+<!-- ========================================== -->
+
+<!-- Terms & Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+      <div class="modal-header border-0 pb-0">
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border-radius: 12px;">
+            <i class="bi bi-file-text text-white fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-white mb-0">Terms & Conditions</h5>
+            <small class="text-light text-opacity-50">Last updated: January 2025</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="text-light text-opacity-75" style="line-height: 1.8; font-size: 0.95rem;">
+          
+          <div class="mb-4 p-3 rounded-3" style="background: rgba(30, 41, 59, 0.5); border-left: 4px solid #0052ff;">
+            <strong class="text-white">Important:</strong> By accessing or using CapitalNest, you agree to be bound by these Terms and Conditions. Please read them carefully.
+          </div>
+
+          <h6 class="text-white fw-bold mb-3">1. Acceptance of Terms</h6>
+          <p class="mb-4">By accessing or using the CapitalNest platform ("Service"), you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the Service.</p>
+
+          <h6 class="text-white fw-bold mb-3">2. Use of Service</h6>
+          <p class="mb-4">CapitalNest provides real-time financial data, portfolio tracking, and investment insights. All information provided is for informational purposes only and should not be construed as financial advice.</p>
+
+          <h6 class="text-white fw-bold mb-3">3. Account Registration</h6>
+          <p class="mb-4">To access certain features, you must register for an account. You agree to provide accurate, current, and complete information during registration and to update such information to keep it accurate and complete.</p>
+
+          <h6 class="text-white fw-bold mb-3">4. Investment Risks</h6>
+          <p class="mb-4">All investments carry risk. Past performance is not indicative of future results. CapitalNest does not guarantee any specific investment outcomes. Users are solely responsible for their investment decisions.</p>
+
+          <h6 class="text-white fw-bold mb-3">5. Intellectual Property</h6>
+          <p class="mb-4">The Service and its original content, features, and functionality are owned by CapitalNest and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
+
+          <h6 class="text-white fw-bold mb-3">6. Limitation of Liability</h6>
+          <p class="mb-4">In no event shall CapitalNest, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential, or punitive damages.</p>
+
+          <h6 class="text-white fw-bold mb-3">7. Governing Law</h6>
+          <p class="mb-4">These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law provisions.</p>
+
+          <h6 class="text-white fw-bold mb-3">8. Changes to Terms</h6>
+          <p class="mb-0">We reserve the right to modify or replace these Terms at any time. It is your responsibility to review these Terms periodically for changes.</p>
+
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background: rgba(255,255,255,0.1); border: none; color: white;">Close</button>
+        <button type="button" class="btn btn-primary" onclick="window.print()" style="background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border: none;">
+          <i class="bi bi-download me-2"></i>Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+      <div class="modal-header border-0 pb-0">
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #00c6ff 0%, #00d67a 100%); border-radius: 12px;">
+            <i class="bi bi-shield-lock text-white fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-white mb-0">Privacy Policy</h5>
+            <small class="text-light text-opacity-50">Your data is secure with us</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="text-light text-opacity-75" style="line-height: 1.8; font-size: 0.95rem;">
+          
+          <div class="mb-4 p-3 rounded-3" style="background: rgba(30, 41, 59, 0.5); border-left: 4px solid #00d67a;">
+            <strong class="text-white">Our Commitment:</strong> CapitalNest is committed to protecting your privacy and ensuring the security of your personal information.
+          </div>
+
+          <h6 class="text-white fw-bold mb-3">1. Information We Collect</h6>
+          <p class="mb-4">We collect information you provide directly to us, including name, email address, phone number, and financial portfolio data. We also collect usage data and device information.</p>
+
+          <h6 class="text-white fw-bold mb-3">2. How We Use Your Information</h6>
+          <p class="mb-4">We use the information to provide and maintain our Service, notify you about changes, provide customer support, and improve our platform. We do not sell your personal data to third parties.</p>
+
+          <h6 class="text-white fw-bold mb-3">3. Data Security</h6>
+          <p class="mb-4">We implement industry-standard security measures including 256-bit encryption, secure servers, and regular security audits to protect your data from unauthorized access.</p>
+
+          <h6 class="text-white fw-bold mb-3">4. Cookies and Tracking</h6>
+          <p class="mb-4">We use cookies and similar tracking technologies to track activity on our Service and hold certain information to improve user experience.</p>
+
+          <h6 class="text-white fw-bold mb-3">5. Third-Party Services</h6>
+          <p class="mb-4">We may employ third-party companies to facilitate our Service, provide the Service on our behalf, or assist us in analyzing how our Service is used. These third parties have access to your data only to perform these tasks.</p>
+
+          <h6 class="text-white fw-bold mb-3">6. Your Rights</h6>
+          <p class="mb-4">You have the right to access, update, or delete your personal information. You can also object to processing of your personal data and request data portability.</p>
+
+          <h6 class="text-white fw-bold mb-3">7. Data Retention</h6>
+          <p class="mb-0">We will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy.</p>
+
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background: rgba(255,255,255,0.1); border: none; color: white;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Security & Compliance Modal -->
+<div class="modal fade" id="securityModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+      <div class="modal-header border-0 pb-0">
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px;">
+            <i class="bi bi-shield-check text-white fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-white mb-0">Security & Compliance</h5>
+            <small class="text-light text-opacity-50">Bank-grade security standards</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="text-light text-opacity-75" style="line-height: 1.8; font-size: 0.95rem;">
+          
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-lock-fill text-success fs-3 mb-2"></i>
+                <h6 class="text-white fw-bold mb-1">256-bit Encryption</h6>
+                <small>All data transmitted between your browser and our servers is encrypted using industry-standard TLS 1.3.</small>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 rounded-3 h-100" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-shield-fill-check text-primary fs-3 mb-2"></i>
+                <h6 class="text-white fw-bold mb-1">SEBI Compliant</h6>
+                <small>We adhere to all Securities and Exchange Board of India regulations and guidelines.</small>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-white fw-bold mb-3">Security Measures</h6>
+          <ul class="list-unstyled mb-4">
+            <li class="mb-2 d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+              <span>Two-factor authentication (2FA) support for all accounts</span>
+            </li>
+            <li class="mb-2 d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+              <span>Regular third-party security audits and penetration testing</span>
+            </li>
+            <li class="mb-2 d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+              <span>Secure data centers with 99.9% uptime guarantee</span>
+            </li>
+            <li class="mb-2 d-flex align-items-start">
+              <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+              <span>Automated threat detection and prevention systems</span>
+            </li>
+          </ul>
+
+          <h6 class="text-white fw-bold mb-3">Compliance Standards</h6>
+          <p class="mb-4">CapitalNest maintains strict compliance with:</p>
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <span class="badge bg-dark border border-secondary">SEBI Regulations</span>
+            <span class="badge bg-dark border border-secondary">RBI Guidelines</span>
+            <span class="badge bg-dark border border-secondary">GDPR Ready</span>
+            <span class="badge bg-dark border border-secondary">ISO 27001</span>
+          </div>
+
+          <h6 class="text-white fw-bold mb-3">Reporting Security Issues</h6>
+          <p class="mb-0">If you discover a security vulnerability, please report it immediately to <a href="mailto:security@capitalnest.in" class="text-primary text-decoration-none">security@capitalnest.in</a>. We take all reports seriously and will respond within 24 hours.</p>
+
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background: rgba(255,255,255,0.1); border: none; color: white;">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Help & Support Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content" style="background: #0f172a; border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
+      <div class="modal-header border-0 pb-0">
+        <div class="d-flex align-items-center gap-3">
+          <div class="d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px;">
+            <i class="bi bi-headset text-white fs-4"></i>
+          </div>
+          <div>
+            <h5 class="modal-title fw-bold text-white mb-0">Help & Support</h5>
+            <small class="text-light text-opacity-50">We're here to help you</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="text-light text-opacity-75" style="line-height: 1.8; font-size: 0.95rem;">
+          
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 text-center h-100" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-envelope-fill text-primary fs-2 mb-2"></i>
+                <h6 class="text-white fw-bold mb-1">Email</h6>
+                <small>capitalnest18@gmail.com</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 text-center h-100" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-telephone-fill text-success fs-2 mb-2"></i>
+                <h6 class="text-white fw-bold mb-1">Phone</h6>
+                <small>+91 9313426208</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="p-3 rounded-3 text-center h-100" style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.05);">
+                <i class="bi bi-chat-dots-fill text-warning fs-2 mb-2"></i>
+                <h6 class="text-white fw-bold mb-1">Live Chat</h6>
+                <small>9 AM - 6 PM IST</small>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="text-white fw-bold mb-3">Frequently Asked Questions</h6>
+          
+          <div class="accordion accordion-flush" id="helpAccordion" style="background: transparent;">
+            <div class="accordion-item" style="background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 10px;">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                  How do I reset my password?
+                </button>
+              </h2>
+              <div id="help1" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                <div class="accordion-body text-light text-opacity-75">
+                  Go to the login page and click on "Forgot Password". Enter your registered email address and we'll send you a reset link.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item" style="background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; margin-bottom: 10px;">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                  How do I update my portfolio?
+                </button>
+              </h2>
+              <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                <div class="accordion-body text-light text-opacity-75">
+                  Navigate to your Portfolio page and click "Add Investment". You can manually add stocks, mutual funds, or IPO investments.
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item" style="background: rgba(30, 41, 59, 0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px;">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed bg-transparent text-white" type="button" data-bs-toggle="collapse" data-bs-target="#help3">
+                  Is my financial data secure?
+                </button>
+              </h2>
+              <div id="help3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                <div class="accordion-body text-light text-opacity-75">
+                  Yes, we use bank-grade 256-bit encryption and are SEBI compliant. Your data is never shared with third parties without your consent.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background: rgba(255,255,255,0.1); border: none; color: white;">Close</button>
+        <a href="mailto:capitalnest18@gmail.com" class="btn btn-primary" style="background: linear-gradient(135deg, #0052ff 0%, #00c6ff 100%); border: none;">
+          <i class="bi bi-envelope me-2"></i>Contact Us
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Modal Styling */
+.modal-content {
+  backdrop-filter: blur(20px);
+}
+.modal-header {
+  padding: 1.5rem;
+}
+.modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-body::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 4px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
+}
+.modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,0.3);
+}
+.accordion-button::after {
+  filter: invert(1);
+}
+</style>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true });
+  </script>
+</body>
+
+</html>

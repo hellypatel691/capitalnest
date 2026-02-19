@@ -1,0 +1,467 @@
+
+
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPO Market - CapitalNest</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0e4f6b;
+            --primary-teal: #0d9488;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #0f172a 0%, #0e7490 100%);
+            padding: 1.5rem 0 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #06b6d4 0%, #10b981 100%);
+        }
+
+        .brand-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        /* SEARCH BAR STYLES - ENSURED VISIBLE */
+        .search-container {
+            max-width: 600px;
+            margin: 1.5rem auto 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-wrapper {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 50px;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper:focus-within {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+        }
+
+        .search-icon {
+            color: white;
+            font-size: 1.2rem;
+            margin-left: 1rem;
+            margin-right: 0.5rem;
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            width: 100%;
+            padding: 0.5rem;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-clear {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-right: 0.5rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .search-clear:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .search-clear.visible {
+            display: flex;
+        }
+
+        .search-stats {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+
+        /* Rest of your existing styles... */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .icon-open { background: rgba(16, 185, 129, 0.15); color: #059669; }
+        .icon-upcoming { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+        .icon-closed { background: rgba(100, 116, 139, 0.15); color: #475569; }
+
+        .section-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .ipo-card {
+            background: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ipo-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .ipo-card.border-success::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        .card-body { padding: 1.75rem; }
+
+        .company-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #0f172a;
+            margin-bottom: 1rem;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .metric-label { color: #64748b; font-weight: 500; }
+        .metric-value { font-weight: 600; color: #0f172a; }
+
+        .days-badge {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .gmp-badge {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1e40af;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .btn-apply {
+            background: linear-gradient(135deg, #0e7490 0%, #0f766e 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+            cursor: pointer;
+        }
+
+        .btn-disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            border: none;
+            border-radius: 12px;
+            padding: 0.875rem;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 1rem;
+            cursor: not-allowed;
+        }
+
+        .closed-list {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            list-style: none;
+            padding: 0;
+        }
+
+        .closed-item {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 1.25rem 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .closed-item:last-child { border-bottom: none; }
+
+        .gain-badge {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            color: #166534;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-weight: 700;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item { display: flex; flex-direction: column; }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; color: #64748b; font-weight: 600; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Highlight for search matches */
+        mark {
+            background: linear-gradient(120deg, #fde047 0%, #facc15 100%);
+            color: #713f12;
+            padding: 0 3px;
+            border-radius: 3px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<!-- IPO Apply Modal -->
+<div class="modal fade" id="applyModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Apply for IPO</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p class="fw-bold" id="modal-company"></p>
+
+        <div class="mb-3">
+          <label class="form-label">Lot Size</label>
+          <input type="text" class="form-control" id="modal-lot-size" disabled>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Price per Share (₹)</label>
+          <input type="text" class="form-control" id="modal-price" disabled>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Number of Lots</label>
+          <input type="number" class="form-control" id="modal-lots" min="1" value="1">
+        </div>
+
+        <hr>
+
+        <h6>
+          Final Amount: ₹
+          <span id="modal-total" class="fw-bold">0</span>
+        </h6>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button class="btn btn-success" onclick="confirmApply()" >Confirm Apply</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<body>
+
+    <!-- HEADER WITH INTEGRATED SEARCH BAR -->
+    <header class="app-header">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="brand-title">
+                    <div class="brand-icon">📈</div>
+                    CapitalNest IPO Market
+                </div>
+                
+            </div>
+            
+            <!-- SEARCH BAR - PLACED PROMINENTLY IN HEADER -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" 
+                           class="search-input" 
+                           id="searchInput" 
+                           placeholder="Search IPOs by company name..."
+                           autocomplete="off">
+                    <button class="search-clear" id="clearSearch">✕</button>
+                </div>
+                <div class="search-stats" id="searchStats"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container my-5">
+        
+        <!-- Stats Summary -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-label">Open IPOs</span>
+                <span class="stat-value text-success" id="open-count">--</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Upcoming</span>
+                <span class="stat-value text-warning" id="upcoming-count">--</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Closed</span>
+                <span class="stat-value text-secondary" id="closed-count">--</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Market Status</span> <!-- MOVED HERE -->
+                <span class="stat-value" id="market-stat-value" style="font-weight: 700;">--</span>
+            </div>
+        </div>
+
+        <!-- OPEN IPOs -->
+        <div class="section-header">
+            <div class="section-icon icon-open">🔥</div>
+            <h4 class="section-title text-success">Open IPOs</h4>
+        </div>
+        <div id="open-ipos" class="row g-4 mb-5"></div>
+
+        <!-- UPCOMING IPOs -->
+        <div class="section-header">
+            <div class="section-icon icon-upcoming">⏳</div>
+            <h4 class="section-title text-warning">Upcoming IPOs</h4>
+        </div>
+        <div id="upcoming-ipos" class="row g-4 mb-5"></div>
+
+        <!-- CLOSED IPOs -->
+        <div class="section-header">
+            <div class="section-icon icon-closed">✅</div>
+            <h4 class="section-title text-secondary">Closed IPOs</h4>
+        </div>
+        <ul id="closed-ipos" class="closed-list"></ul>
+
+    </div>
+
+    <script src="{% static 'js/ipo_real.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

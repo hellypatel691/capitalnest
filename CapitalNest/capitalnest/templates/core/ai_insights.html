@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Investment Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --text: #111827;
+      --text-dim: #6b7280;
+      --text-light: #9ca3af;
+      --radius: 24px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.4;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .badge i {
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-dim);
+      font-weight: 400;
+      margin: 0;
+    }
+
+    /* Main Container */
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 2rem;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    /* Chat Card */
+    .chat-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .chat-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    .ai-avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .chat-title {
+      flex: 1;
+    }
+
+    .chat-title h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+      color: var(--text);
+    }
+
+    .chat-title p {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #ecfdf5;
+      color: var(--accent-green);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: blink 1.5s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* Chat Box */
+    #chat-box {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: #f9fafb;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 1.5rem;
+      scroll-behavior: smooth;
+    }
+
+    #chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #chat-box::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #chat-box::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .message {
+      margin-bottom: 1rem;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message-user {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .message-ai {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      max-width: 80%;
+      padding: 1rem 1.25rem;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .message-user .message-bubble {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+
+    .message-ai .message-bubble {
+      background: white;
+      color: var(--text);
+      border: 1px solid #e5e7eb;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-ai .message-bubble strong {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    /* Typing Indicator */
+    .typing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 1rem 1.25rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      border-bottom-left-radius: 4px;
+      width: fit-content;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-light);
+      border-radius: 50%;
+      animation: typing 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+    @keyframes typing {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    /* Input Group */
+    .input-group {
+      display: flex;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    #user-input {
+      flex: 1;
+      padding: 1rem 1.25rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      background: white;
+      color: var(--text);
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    #user-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    #user-input::placeholder {
+      color: var(--text-light);
+    }
+
+    .btn-send {
+      width: 56px;
+      height: 56px;
+      border: none;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-send:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-send:active {
+      transform: scale(0.95);
+    }
+
+    /* Features Sidebar */
+    .features-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .feature-icon.blue {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+    }
+
+    .feature-icon.green {
+      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    }
+
+    .feature-icon.purple {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #6366f1 100%);
+    }
+
+    .feature-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin: 0 0 1rem 0;
+      line-height: 1.5;
+    }
+
+    .feature-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dim);
+    }
+
+    /* Quick Suggestions */
+    .suggestions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .suggestion-chip {
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .suggestion-chip:hover {
+      background: var(--accent-blue);
+      color: white;
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      
+      .features-sidebar {
+        display: none;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-pattern"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">
+      <i class="fas fa-sparkles"></i>
+      AI INSIGHTS
+    </div>
+    <h1>Everything You Need to Invest Smarter</h1>
+    <p class="subtitle">All-in-one platform for modern investors.</p>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Chat Section -->
+    <div class="chat-card">
+      <div class="chat-header">
+        <div class="ai-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="chat-title">
+          <h3>Investment Assistant</h3>
+          <p>Powered by Advanced AI</p>
+        </div>
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          Online
+        </div>
+      </div>
+
+      <div id="chat-box">
+        <div class="message message-ai">
+          <div class="message-bubble">
+            <strong>Hello!</strong> I'm your AI investment assistant. I can help you with portfolio analysis, stock recommendations, risk assessment, and market insights. What would you like to know?
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <input
+          id="user-input"
+          placeholder="Ask about stocks, portfolio, risk..."
+          autocomplete="off"
+          onkeydown="if(event.key==='Enter') sendMessage()"
+        />
+        <button class="btn-send" onclick="sendMessage()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="suggestions">
+        <div class="suggestion-chip" onclick="setInput('Analyze my portfolio risk')">Analyze risk</div>
+        <div class="suggestion-chip" onclick="setInput('Best stocks to buy now')">Stock picks</div>
+        <div class="suggestion-chip" onclick="setInput('Market outlook 2024')">Market outlook</div>
+        <div class="suggestion-chip" onclick="setInput('Tax loss harvesting')">Tax tips</div>
+      </div>
+    </div>
+
+    <!-- Features Sidebar -->
+    <div class="features-sidebar">
+      <div class="feature-card" onclick="sendAutoPrompt('portfolio')">
+        <div class="feature-icon blue">
+          <i class="fas fa-chart-pie"></i>
+        </div>
+        <h4>Portfolio Analytics</h4>
+        <p>Risk, diversification, and tax-loss harvesting insights.</p>
+        <div class="feature-tag">
+          <i class="fas fa-wand-magic-sparkles" style="font-size: 10px;"></i>
+          Smart Analysis
+        </div>
+      </div>
+
+      <div class="feature-card" onclick="sendAutoPrompt('insights')">
+        <div class="feature-icon green">
+          <i class="fas fa-brain"></i>
+        </div>
+        <h4>AI Insights</h4>
+        <p>Personalized recommendations and smart rebalancing.</p>
+        <div class="feature-tag">
+          <i class="fas fa-bolt" style="font-size: 10px;"></i>
+          AI Powered
+        </div>
+      </div>
+
+      <div class="feature-card" onclick="sendAutoPrompt('security')">
+        <div class="feature-icon purple">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h4>Account Security</h4>
+        <p>Bank-grade encryption and secure transactions.</p>
+        <div class="feature-tag">
+          <i class="fas fa-check-circle" style="font-size: 10px;"></i>
+          Protected
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function sendAutoPrompt(type) {
+      let prompt = '';
+      
+      if (type === 'portfolio') {
+        prompt = 'Analyze my current portfolio in detail. Show me my best and worst performing stocks, assess my diversification, identify any concentration risks, and provide specific recommendations on which stocks to hold, sell, or buy more of. Include P&L analysis for each holding.';
+      } else if (type === 'insights') {
+        prompt = 'Based on current market trends and my portfolio, what should I do for future investments? Recommend specific stocks or sectors I should consider, identify upcoming opportunities, suggest portfolio rebalancing strategies, and provide actionable insights for the next 3-6 months.';
+      } else if (type === 'security') {
+        prompt = 'Provide a comprehensive security assessment of my account. Check for any unusual activity patterns, review my transaction history for anomalies, suggest security best practices for my investment account, and recommend steps to enhance my account protection.';
+      }
+      
+      document.getElementById("user-input").value = prompt;
+      sendMessage();
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("user-input");
+      const message = input.value.trim();
+      if (!message) return;
+      
+      input.value = "";
+      const chatBox = document.getElementById("chat-box");
+      
+      // Add user message
+      chatBox.innerHTML += `
+        <div class="message message-user">
+          <div class="message-bubble">${escapeHtml(message)}</div>
+        </div>
+      `;
+      
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      // Show typing indicator
+      const typingId = 'typing-' + Date.now();
+      chatBox.innerHTML += `
+        <div class="message message-ai" id="${typingId}">
+          <div class="typing">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      `;
+      
+      chatBox.scrollTop = chatBox.scrollHeight;
+      
+      // Simulate API call
+      fetch("/ai/chat/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById(typingId).remove();
+          chatBox.innerHTML += `
+            <div class="message message-ai">
+              <div class="message-bubble"><strong>AI:</strong> ${escapeHtml(data.reply)}</div>
+            </div>
+          `;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        })
+        .catch(() => {
+          document.getElementById(typingId).remove();
+          chatBox.innerHTML += `
+            <div class="message message-ai">
+              <div class="message-bubble"><strong>AI:</strong> <span style="color:#dc2626">Sorry, something went wrong. Try again.</span></div>
+            </div>
+          `;
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    }
+
+    function setInput(text) {
+      document.getElementById("user-input").value = text;
+      document.getElementById("user-input").focus();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      })[m]);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,955 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Open Demat Account – Quick & Paperless</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --text: #111827;
+      --text-dim: #6b7280;
+      --text-light: #9ca3af;
+      --border: #e5e7eb;
+      --radius: 24px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      padding: 3rem 2rem 2rem;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #6366f1 100%);
+      color: white;
+      padding: 8px 20px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      color: var(--text-dim);
+      font-size: 1.125rem;
+      font-weight: 400;
+    }
+
+    /* Progress Steps */
+    .steps-container {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .steps::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--border);
+      z-index: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1;
+    }
+
+    .step-number {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: white;
+      border: 3px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .step.active .step-number {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      border-color: transparent;
+      color: white;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    }
+
+    .step.completed .step-number {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
+
+    .step.active .step-label {
+      color: var(--accent-blue);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      animation: fadeInUp 0.8s ease 0.2s both;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    /* Section Headers */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #f3f4f6;
+    }
+
+    .section-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: white;
+    }
+
+    .section-icon.personal {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+    }
+
+    .section-icon.kyc {
+      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+    }
+
+    .section-icon.bank {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #6366f1 100%);
+    }
+
+    .section-title h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+    }
+
+    .section-title p {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      margin: 0;
+    }
+
+    /* Form Grid */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      position: relative;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    label span {
+      color: var(--text-light);
+      font-weight: 400;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="file"] {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+    }
+
+    input::placeholder {
+      color: var(--text-light);
+    }
+
+    /* File Upload Cards */
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .upload-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .upload-card {
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      background: #f9fafb;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-card:hover {
+      border-color: var(--accent-blue);
+      background: #eff6ff;
+    }
+
+    .upload-card.dragover {
+      border-color: var(--accent-blue);
+      background: #dbeafe;
+      transform: scale(1.02);
+    }
+
+    .upload-card.has-file {
+      border-color: var(--accent-green);
+      background: #ecfdf5;
+    }
+
+    .upload-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem;
+      font-size: 28px;
+      color: var(--accent-blue);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .upload-card.has-file .upload-icon {
+      color: var(--accent-green);
+    }
+
+    .upload-text {
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .upload-hint {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+    }
+
+    .upload-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .file-preview {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .file-preview.show {
+      display: block;
+    }
+
+    .preview-img {
+      max-height: 100px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .file-name {
+      font-size: 0.875rem;
+      color: var(--accent-green);
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    /* Checkbox */
+    .checkbox-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: #f9fafb;
+      border-radius: 12px;
+    }
+
+    .checkbox-wrapper input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+    }
+
+    .checkbox-wrapper label {
+      margin: 0;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .checkbox-wrapper a {
+      color: var(--accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .checkbox-wrapper a:hover {
+      text-decoration: underline;
+    }
+
+    /* Submit Button */
+    .submit-btn {
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    .submit-btn.loading .spinner {
+      display: inline-block;
+    }
+
+    .submit-btn.loading .btn-text {
+      display: none;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Success Message */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-cyan) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 40px;
+      color: white;
+      animation: scaleIn 0.5s ease 0.2s both;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+
+    .success-message h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-message p {
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 2rem;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Floating Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 50%;
+      animation: float 20s infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">
+      <i class="fas fa-shield-alt"></i>
+      DEMAT ACCOUNT
+    </div>
+    <h1>Open Your Account</h1>
+    <p class="subtitle">100% paperless – takes less than 5 minutes</p>
+  </div>
+
+  <!-- Progress Steps -->
+  <div class="steps-container">
+    <div class="steps">
+      <div class="step active" id="step1">
+        <div class="step-number">1</div>
+        <span class="step-label">Personal</span>
+      </div>
+      <div class="step" id="step2">
+        <div class="step-number">2</div>
+        <span class="step-label">KYC Docs</span>
+      </div>
+      <div class="step" id="step3">
+        <div class="step-number">3</div>
+        <span class="step-label">Bank Details</span>
+      </div>
+      <div class="step" id="step4">
+        <div class="step-number">4</div>
+        <span class="step-label">Verify</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Form -->
+  <div class="container">
+    <div class="form-card" id="formCard">
+      <form id="dematForm" method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        <!-- Personal Details Section -->
+        <div class="section-header">
+          <div class="section-icon personal">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="section-title">
+            <h3>Personal Details</h3>
+            <p>Basic information for your account</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="full_name">Full Name <span>(as per PAN)</span></label>
+            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="mobile">Mobile Number</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="10-digit number" maxlength="10" required>
+          </div>
+        </div>
+
+        <!-- KYC Section -->
+        <div class="section-header">
+          <div class="section-icon kyc">
+            <i class="fas fa-id-card"></i>
+          </div>
+          <div class="section-title">
+            <h3>KYC Verification</h3>
+            <p>Identity verification documents</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="pan">PAN Number</label>
+            <input type="text" id="pan" name="pan" placeholder="ABCDE1234F" maxlength="10" style="text-transform: uppercase;" required>
+          </div>
+
+          <div class="form-group">
+            <label for="aadhaar">Aadhaar Number</label>
+            <input type="text" id="aadhaar" name="aadhaar" placeholder="12-digit number" maxlength="12" required>
+          </div>
+        </div>
+
+        <!-- File Uploads -->
+        <div class="upload-grid">
+          <div class="upload-card" id="panUpload">
+            <input type="file" class="upload-input" id="pan_file" name="pan_file" accept=".jpg,.jpeg,.png,.pdf" required>
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">Upload PAN Card</div>
+            <div class="upload-hint">Drop file here or click to browse<br>JPEG, PNG or PDF (max 1MB)</div>
+            <div class="file-preview" id="panPreview">
+              <img class="preview-img" alt="PAN preview">
+              <div class="file-name"></div>
+            </div>
+          </div>
+
+          <div class="upload-card" id="aadhaarUpload">
+            <input type="file" class="upload-input" id="aadhaar_file" name="aadhaar_file" accept=".jpg,.jpeg,.png,.pdf" required>
+            <div class="upload-icon">
+              <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">Upload Aadhaar</div>
+            <div class="upload-hint">Drop file here or click to browse<br>JPEG, PNG or PDF (max 1MB)</div>
+            <div class="file-preview" id="aadhaarPreview">
+              <img class="preview-img" alt="Aadhaar preview">
+              <div class="file-name"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Details Section -->
+        <div class="section-header">
+          <div class="section-icon bank">
+            <i class="fas fa-university"></i>
+          </div>
+          <div class="section-title">
+            <h3>Bank Details <span style="color: var(--text-light); font-weight: 400;">(Optional)</span></h3>
+            <p>For linking your trading account</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="bank">Bank Name</label>
+            <input type="text" id="bank" name="bank" placeholder="e.g. HDFC Bank">
+          </div>
+
+          <div class="form-group">
+            <label for="account">Account Number</label>
+            <input type="text" id="account" name="account" placeholder="Account number">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="ifsc">IFSC Code</label>
+            <input type="text" id="ifsc" name="ifsc" placeholder="SBIN0001234" style="text-transform: uppercase;">
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="checkbox-wrapper">
+          <input type="checkbox" id="tnc" name="tnc" required>
+          <label for="tnc">
+            I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a>. 
+            I provide consent to use my Aadhaar for e-KYC verification and confirm all details are accurate.
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="spinner"></span>
+          <span class="btn-text">Open Demat Account</span>
+          <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+        </button>
+      </form>
+
+      <!-- Success Message -->
+      <div class="success-message" id="successMessage">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+        <h3>Application Submitted!</h3>
+        <p>We've received your details. You'll receive a confirmation email shortly with next steps.</p>
+        <button class="btn-secondary" onclick="location.reload()">
+          <i class="fas fa-plus" style="margin-right: 8px;"></i>
+          Open Another Account
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Create floating particles
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    // File upload handling
+    function setupUpload(inputId, cardId, previewId) {
+      const input = document.getElementById(inputId);
+      const card = document.getElementById(cardId);
+      const preview = document.getElementById(previewId);
+      const img = preview.querySelector('.preview-img');
+      const fileName = preview.querySelector('.file-name');
+
+      // Drag and drop
+      card.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        card.classList.add('dragover');
+      });
+
+      card.addEventListener('dragleave', () => {
+        card.classList.remove('dragover');
+      });
+
+      card.addEventListener('drop', (e) => {
+        e.preventDefault();
+        card.classList.remove('dragover');
+        if (e.dataTransfer.files.length) {
+          input.files = e.dataTransfer.files;
+          handleFile(input.files[0]);
+        }
+      });
+
+      input.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      function handleFile(file) {
+        if (file.size > 1024 * 1024) {
+          alert('File size must be less than 1MB');
+          input.value = '';
+          return;
+        }
+
+        card.classList.add('has-file');
+        preview.classList.add('show');
+        fileName.textContent = file.name;
+
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            img.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          img.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%233b82f6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
+        }
+
+        updateSteps();
+      }
+    }
+
+    setupUpload('pan_file', 'panUpload', 'panPreview');
+    setupUpload('aadhaar_file', 'aadhaarUpload', 'aadhaarPreview');
+
+    // Form validation and steps
+    const form = document.getElementById('dematForm');
+    const inputs = form.querySelectorAll('input[required]');
+    const steps = document.querySelectorAll('.step');
+
+    function updateSteps() {
+      const fullName = document.getElementById('full_name').value;
+      const dob = document.getElementById('dob').value;
+      const email = document.getElementById('email').value;
+      const mobile = document.getElementById('mobile').value;
+      const pan = document.getElementById('pan').value;
+      const aadhaar = document.getElementById('aadhaar').value;
+      const panFile = document.getElementById('pan_file').files.length;
+      const aadhaarFile = document.getElementById('aadhaar_file').files.length;
+
+      // Step 1: Personal
+      if (fullName && dob && email && mobile) {
+        steps[0].classList.add('completed');
+        steps[0].classList.remove('active');
+        steps[0].querySelector('.step-number').innerHTML = '<i class="fas fa-check"></i>';
+        steps[1].classList.add('active');
+      }
+
+      // Step 2: KYC
+      if (pan && aadhaar && panFile && aadhaarFile) {
+        steps[1].classList.add('completed');
+        steps[1].classList.remove('active');
+        steps[1].querySelector('.step-number').innerHTML = '<i class="fas fa-check"></i>';
+        steps[2].classList.add('active');
+      }
+
+      // Step 3: Bank (optional, auto-complete if any field filled)
+      const bank = document.getElementById('bank').value;
+      const account = document.getElementById('account').value;
+      const ifsc = document.getElementById('ifsc').value;
+      if (bank || account || ifsc) {
+        steps[2].classList.add('completed');
+        steps[2].classList.remove('active');
+        steps[2].querySelector('.step-number').innerHTML = '<i class="fas fa-check"></i>';
+        steps[3].classList.add('active');
+      }
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener('input', updateSteps);
+      input.addEventListener('change', updateSteps);
+    });
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      // Simulate API call
+      setTimeout(() => {
+        document.getElementById('formCard').querySelector('form').style.display = 'none';
+        document.getElementById('successMessage').classList.add('show');
+        
+        // Complete all steps
+        steps.forEach((step, index) => {
+          if (index < 3) {
+            step.classList.add('completed');
+            step.classList.remove('active');
+            step.querySelector('.step-number').innerHTML = '<i class="fas fa-check"></i>';
+          }
+          steps[3].classList.add('completed');
+          steps[3].querySelector('.step-number').innerHTML = '<i class="fas fa-check"></i>';
+        });
+      }, 1500);
+    });
+
+    // Input formatting
+    document.getElementById('mobile').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    document.getElementById('aadhaar').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
+    });
+
+    document.getElementById('pan').addEventListener('input', function(e) {
+      e.target.value = e.target.value.toUpperCase();
+    });
+  </script>
+</body>
+</html>

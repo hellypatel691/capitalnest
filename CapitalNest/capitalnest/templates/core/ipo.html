@@ -1,0 +1,1369 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>IPO – CapitalNest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    :root {
+      --bg: #f3f4f6;
+      --card: #ffffff;
+      --accent-blue: #3b82f6;
+      --accent-cyan: #06b6d4;
+      --accent-green: #10b981;
+      --accent-orange: #f59e0b;
+      --logo-cyan: #22d3ee;
+      --text: #111827;
+      --text-dim: #6b7280;
+      --text-light: #9ca3af;
+      --border: #e5e7eb;
+      --sidebar-bg: #ffffff;
+      --radius: 24px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      --shadow-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      color: var(--text);
+    }
+
+    /* ========== Sidebar ========== */
+    #sidebar {
+      width: 280px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .sidebar-header {
+      padding: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-img {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      object-fit: contain;
+    }
+
+    .brand-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-menu {
+      flex: 1;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background: #f3f4f6;
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .nav-link i {
+      width: 24px;
+      text-align: center;
+      font-size: 1.25rem;
+    }
+
+    .nav-footer {
+      padding: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .logout-link {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .logout-link:hover {
+      background: #fef2f2;
+      color: #ef4444;
+    }
+
+    /* ========== Main Content ========== */
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #topbar {
+      background: var(--card);
+      padding: 1.25rem 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .welcome-text {
+      color: var(--text-dim);
+      font-size: 0.875rem;
+    }
+
+    .welcome-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .user-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 2.5rem;
+    }
+
+    /* Metrics Grid */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 1200px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .metrics { grid-template-columns: 1fr; }
+    }
+
+    .metric-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(180deg, var(--accent-orange) 0%, #fbbf24 100%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .metric-card:hover::before {
+      opacity: 1;
+    }
+
+    .metric-label {
+      font-size: 0.875rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value.positive {
+      color: var(--accent-green);
+    }
+
+    .metric-sub {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    .metric-sub.positive {
+      color: var(--accent-green);
+    }
+
+    /* Tables */
+    .table-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .table-header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .table-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .btn-primary {
+      padding: 0.625rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-outline {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text-dim);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    .btn-outline:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .table-responsive {
+      padding: 0 2rem 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      text-align: left;
+      padding: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 1.5rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover {
+      background: #f9fafb;
+    }
+
+    .company-name {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .company-sub {
+      font-size: 0.875rem;
+      color: var(--text-light);
+    }
+
+    .text-end {
+      text-align: right;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .positive {
+      color: var(--accent-green);
+      font-weight: 600;
+    }
+
+    .negative {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    /* Status Badges */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.375rem 0.875rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .status-badge.open {
+      background: #ecfdf5;
+      color: var(--accent-green);
+    }
+
+    .status-badge.coming {
+      background: #eff6ff;
+      color: var(--accent-blue);
+    }
+
+    .status-badge.new {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    /* Mobile Toggle */
+    .mobile-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      border: none;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        z-index: 1000;
+        transition: left 0.3s;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.1);
+      }
+
+      #sidebar.show {
+        left: 0;
+      }
+
+      .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .content {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <div class="sidebar-header">
+      <img src="{% static 'images/2.png' %}" alt="CapitalNest" class="logo-img">
+      <span class="brand-name">CapitalNest</span>
+    </div>
+
+    <div class="nav-menu">
+      <a href="{% url 'dashboard' %}" class="nav-link">
+        <i class="fas fa-th-large"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="{% url 'stocks' %}" class="nav-link">
+        <i class="fas fa-chart-line"></i>
+        <span>Stocks</span>
+      </a>
+      <!-- <a href="{% url 'mutual_funds' %}" class="nav-link">
+        <i class="fas fa-coins"></i>
+        <span>Mutual Funds</span>
+      </a> -->
+      <a href="{% url 'ipo' %}" class="nav-link active">
+        <i class="fas fa-rocket"></i>
+        <span>IPO</span>
+      </a>
+      <a href="{% url 'home' %}" class="nav-link">
+        <i class="fas fa-home"></i>
+        <span>← Back to Home</span>
+      </a>
+
+    </div>
+    
+    <div class="nav-footer">
+      <a href="{% url 'logout' %}" class="logout-link">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </a>
+      
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div id="main">
+    <!-- Top Bar -->
+    <header id="topbar">
+  <div style="display: flex; align-items: center;">
+    <button class="mobile-toggle" onclick="toggleSidebar()">
+      <i class="fas fa-bars"></i>
+    </button>
+    <h1 class="page-title">Dashboard</h1>
+  </div>
+  
+  <!-- User Section with Clickable Avatar -->
+  <div class="user-section">
+    <div class="user-info" onclick="openProfileModal()" style="cursor: pointer;">
+      <span class="welcome-text">Welcome back, <strong>{{ user.username }}</strong></span>
+      <div class="avatar-wrapper">
+        <img src="{% static 'images/profile.png' %}" alt="Profile" class="user-avatar">
+        <div class="avatar-overlay">
+          <i class="fas fa-user-edit"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Profile Modal -->
+<div id="profileModal" class="profile-modal">
+  <div class="modal-backdrop" onclick="closeProfileModal()"></div>
+  <div class="profile-card">
+    <!-- Close Button -->
+    <button class="modal-close" onclick="closeProfileModal()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-avatar-section">
+        <div class="profile-avatar-wrapper">
+          <img src="{% static 'images/profile.png' %}" alt="Profile" class="profile-avatar-large">
+          <div class="avatar-status online"></div>
+        </div>
+        <button class="change-photo-btn">
+          <i class="fas fa-camera"></i>
+        </button>
+      </div>
+      
+      <div class="profile-title">
+        <h3 class="profile-name">{{ user.get_full_name|default:user.username }}</h3>
+        <span class="profile-username">@{{ user.username }}</span>
+        <div class="profile-badges">
+          <span class="badge-verified">
+            <i class="fas fa-check-circle"></i> Verified
+          </span>
+          <span class="badge-member">
+            <i class="fas fa-calendar-alt"></i> Member since {{ user.date_joined|date:"M Y" }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Details -->
+    <div class="profile-body">
+      <div class="detail-section">
+        <h4 class="section-label">
+          <i class="fas fa-user-circle"></i> Account Information
+        </h4>
+        
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="detail-label">Username</span>
+            <span class="detail-value">{{ user.username }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-value">{{ user.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-section">
+        <h4 class="section-label">
+          <i class="fas fa-shield-alt"></i> Security
+        </h4>
+        
+        <div class="security-grid">
+          <div class="security-item">
+            <div class="security-icon green">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="security-info">
+              <span class="security-title">Password</span>
+              <span class="security-status">Last changed recently</span>
+            </div>
+          </div>
+          
+          <div class="security-item">
+            <div class="security-icon green">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="security-info">
+              <span class="security-title">Email Verified</span>
+              <span class="security-status">{{ user.email }}</span>
+            </div>
+            <span class="verified-badge">
+              <i class="fas fa-check"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Footer -->
+    <div class="profile-footer">
+      <button class="btn-logout" onclick="confirmLogout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* User Section Styles */
+.user-section {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.user-info:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.welcome-text {
+  color: var(--text-dim);
+  font-size: 0.875rem;
+  text-align: right;
+}
+
+.welcome-text strong {
+  color: var(--text);
+  font-weight: 600;
+  display: block;
+  font-size: 1rem;
+}
+
+.avatar-wrapper {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.user-info:hover .user-avatar {
+  border-color: var(--accent-blue);
+  transform: scale(1.05);
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 1rem;
+}
+
+.user-info:hover .avatar-overlay {
+  opacity: 1;
+}
+
+/* Modal Styles */
+.profile-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.profile-modal.active {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.3s ease;
+}
+
+.profile-card {
+  position: relative;
+  background: white;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.modal-close:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* Profile Header */
+.profile-header {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+  padding: 2.5rem 2rem 2rem;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.profile-avatar-section {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  padding: 4px;
+  background: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.profile-avatar-large {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+.avatar-status.online {
+  background: #10b981;
+}
+
+.change-photo-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid white;
+  background: var(--accent-blue);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.change-photo-btn:hover {
+  transform: scale(1.1);
+  background: var(--accent-cyan);
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.profile-username {
+  opacity: 0.9;
+  font-size: 0.875rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.profile-badges {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.badge-verified,
+.badge-member {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+}
+
+/* Profile Body */
+.profile-body {
+  padding: 1.5rem 2rem;
+}
+
+.detail-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-label i {
+  color: var(--accent-blue);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.detail-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 0.9375rem;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.id-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.copy-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: white;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.copy-btn:hover {
+  background: var(--accent-blue);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* Security Section */
+.security-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.security-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.security-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.security-icon.green {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.security-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.security-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.security-status {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+
+.security-action {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: white;
+  color: var(--text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.security-action:hover {
+  background: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+}
+
+.verified-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #d1fae5;
+  color: #059669;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+}
+
+/* Portfolio Mini Stats */
+.portfolio-mini-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.mini-stat {
+  text-align: center;
+  padding: 1rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.mini-stat-value {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.mini-stat-value.positive {
+  color: var(--accent-green);
+}
+
+.mini-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Profile Footer */
+.profile-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+  background: #f8fafc;
+  border-radius: 0 0 24px 24px;
+}
+
+.btn-edit,
+.btn-logout {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-cyan) 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-edit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.btn-logout {
+  background: white;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+}
+
+.btn-logout:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  transform: translateY(-2px);
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #1e293b;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10000;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.toast i {
+  color: var(--accent-green);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .portfolio-mini-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .profile-header {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+  
+  .profile-body {
+    padding: 1.5rem;
+  }
+}
+</style>
+
+<!-- Toast Notification -->
+<div id="toast" class="toast">
+  <i class="fas fa-check-circle"></i>
+  <span id="toastMessage">Copied to clipboard!</span>
+</div>
+
+<script>
+// Modal Functions
+function openProfileModal() {
+  document.getElementById('profileModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProfileModal() {
+  document.getElementById('profileModal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeProfileModal();
+  }
+});
+
+// Copy to Clipboard
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('Account ID copied to clipboard!');
+  }, function(err) {
+    // Fallback for older browsers
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textArea);
+    showToast('Account ID copied to clipboard!');
+  });
+}
+
+// Toast Notification
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toastMessage');
+  toastMessage.textContent = message;
+  toast.classList.add('show');
+  
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
+}
+// Logout Confirmation
+function confirmLogout() {
+  if (confirm('Are you sure you want to logout?')) {
+    window.location.href = "{% url 'logout' %}";
+  }
+}
+
+// Close modal when clicking outside
+document.getElementById('profileModal').addEventListener('click', function(e) {
+  if (e.target === this) {
+    closeProfileModal();
+  }
+});
+</script>
+    <!-- Content -->
+    <div class="content">
+      <!-- Metrics -->
+      <div class="metrics">
+        <div class="metric-card" data-aos="fade-up">
+          <div class="metric-label">Active IPOs</div>
+          <div class="metric-value">{{ applied_count }}</div>
+          <div class="metric-sub">
+            {{ allotted_count }} allotted |
+            {{ rejected_count }} rejected
+          </div>
+        </div>
+
+        <div class="metric-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="metric-label">Total Applied</div>
+          <div class="metric-value">{{ total_applied }}</div>
+        </div>
+
+        <div class="metric-card" data-aos="fade-up" data-aos-delay="200">
+          <div class="metric-label">Total Invested</div>
+          <div class="metric-value positive">₹{{ total_invested }}</div>
+          <div class="metric-sub">From Allotted IPOs</div>
+        </div>
+
+        <div class="metric-card" data-aos="fade-up" data-aos-delay="300">
+          <div class="metric-label">Wallet Balance</div>
+          <div class="metric-value">₹{{ wallet_balance }}</div>
+          <div class="metric-sub">Available for IPO</div>
+        </div>
+      </div>
+
+      <!-- Current IPOs Table -->
+      <div class="table-card" data-aos="fade-up">
+        <div class="table-header">
+          <h3 class="table-title">Current IPOs</h3>
+          <a href="{% url 'ipo_real_page' %}" class="btn-primary">Apply Now</a>
+        </div>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th class="text-end">Price/Share (₹)</th>
+                <th class="text-end">Lots</th>
+                <th class="text-end">Total Amount (₹)</th>
+                <th class="text-center">Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+          {% for app in user_apps %}
+          <tr>
+            <td>
+              <div class="company-name">{{ app.ipo_name }}</div>
+            </td>
+
+            <!-- Price per share -->
+            <td class="text-end">
+              ₹{{ app.price_per_share }}
+            </td>
+
+            <!-- Lots -->
+            <td class="text-end">
+              {{ app.lots }}
+            </td>
+
+            <!-- Total Amount (Realistic Calculation) -->
+            <td class="text-end">
+              ₹{{ app.total_amount }}
+            </td>
+
+            <!-- Status -->
+            <td class="text-center">
+              <span class="status-badge 
+                {% if app.status == 'Allotted' %}open
+                {% elif app.status == 'Rejected' %}coming
+                {% else %}new{% endif %}">
+                {{ app.status|upper }}
+              </span>
+            </td>
+
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">No IPO applications yet</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 800 });
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('show');
+    }
+  </script>
+</body>
+</html>
